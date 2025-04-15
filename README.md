@@ -1,4 +1,4 @@
 # Tic Tac Toe 🧩
 ### Features:
-- 1v1
+- Player vs. Player And Player vs. Computer
 - Clean Interface
