@@ -15,15 +15,17 @@ class UserInterface:
         self.tic_tac_toe: TicTacToe = TicTacToe()
 
     def display_board(self, disable_positions_chart_view:bool=False) -> None:
-        print()
+        if self.tic_tac_toe.is_computer_player_mode_on():
+            print(f"Computer Mode: {self.tic_tac_toe.get_computer_mode().capitalize()}")
+            print()
         b: dict[str, str] = self.tic_tac_toe.board
         print(f"{b['1']}|{b['2']}|{b['3']}")
         print("-----")
         print(f"{b['4']}|{b['5']}|{b['6']}")
         print("-----")
         print(f"{b['7']}|{b['8']}|{b['9']}")
-        print()
         if not disable_positions_chart_view:
+            print()
             print("Positions:")
             print("1|2|3")
             print("-----")
@@ -96,7 +98,27 @@ class UserInterface:
             else:
                 print(f"Please Enter '{O}' OR '{X}'\n")
 
-    def get_valid_mode_selection(self) -> str:
+    def get_valid_mode_difficulty_selection(self) -> str:
+        mode_difficulty = {
+            "1": "easy",
+            "2": "medium",
+            "3": "hard"
+        }
+        while True:
+            self.display_board(disable_positions_chart_view=True)
+            print()
+
+            mode = input(f"Select An Option:\n1. Easy\n2. Medium\n3. Hard\nor ({self.GO_BACK})ack\n\n> ").strip().upper()
+            clear_screen()
+
+            if mode == self.GO_BACK:
+                return mode
+            elif mode in ("1", "2", "3"):
+                return mode_difficulty[mode]
+            else:
+                print("Please Enter A Valid Mode Number!\n")
+
+    def get_valid_versus_mode_selection(self) -> str:
         while True:
             self.display_board(disable_positions_chart_view=True)
             print()
@@ -111,8 +133,11 @@ class UserInterface:
             
     def play_game(self) -> None:
         while True:
-            if self.get_valid_mode_selection() == "2":
-                self.tic_tac_toe.turn_on_computer_versus_player_mode()
+            if self.get_valid_versus_mode_selection() == "2":
+                mode = self.get_valid_mode_difficulty_selection()
+                if mode == self.GO_BACK:
+                    continue
+                self.tic_tac_toe.turn_on_computer_versus_player_mode(mode)
 
             player1_symbol = self.get_valid_player_one_symbol()
             if player1_symbol == self.GO_BACK:
