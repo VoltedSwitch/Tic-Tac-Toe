@@ -1,11 +1,11 @@
-def flip_dict(dictionary: dict) -> dict:
+def has_true_value(dictionary: dict) -> bool:
     """
-    Flips a dictionary, swapping keys and values.
+    Checks if any value in the dictionary is True.
     
     Args:
-        dictionary (dict): The dictionary to flip.
+        dictionary (dict): The dictionary to check.
         
     Returns:
-        dict: The flipped dictionary.
+        bool: True if any value is True, False otherwise.
     """
-    return {v: k for k, v in dictionary.items()}
+    return any(dictionary.values())
