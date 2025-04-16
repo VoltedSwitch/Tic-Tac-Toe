@@ -16,7 +16,7 @@ class UserInterface:
 
     def display_board(self, disable_positions_chart_view:bool=False) -> None:
         if self.tic_tac_toe.is_computer_player_mode_on():
-            print(f"Computer Mode: {self.tic_tac_toe.get_computer_mode().capitalize()}")
+            print(f"Computer Mode Difficulty: {self.tic_tac_toe.get_computer_mode_difficulty().capitalize()}")
             print()
         b: dict[str, str] = self.tic_tac_toe.board
         print(f"{b['1']}|{b['2']}|{b['3']}")

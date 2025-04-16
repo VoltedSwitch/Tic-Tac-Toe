@@ -73,7 +73,7 @@ class TicTacToe:
 
     # Getter methods:
 
-    def get_computer_mode(self) -> str | None:
+    def get_computer_mode_difficulty(self) -> str | None:
         if self.is_computer_player_mode["easy"]:
             return "easy"
         elif self.is_computer_player_mode["medium"]:
