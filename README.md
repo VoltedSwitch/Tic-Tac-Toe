@@ -1,5 +1,6 @@
 # Tic Tac Toe 🧩
 ### Features:
 - Player vs. Player And Player vs. Computer
-- B for Back
+- Multi Modes For Computer Difficulty
+- B For Back
 - Clean Interface
