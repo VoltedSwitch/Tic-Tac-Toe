@@ -1,5 +1,6 @@
 import random
 from .player import Player
+from .structure_utility_functions import has_true_value
 
 class TicTacToe:
     WINNING_COMBINATIONS: list[list[str]] = [
@@ -40,16 +41,16 @@ class TicTacToe:
     
     def reset_game(self):
         self.reset_board()
-        self.reset_mode()
+        if self.is_computer_player_mode_on():
+            self.reset_computer_player_mode()
         self.reset_player_symbols()
         self.active_player = 1
         self.winner = None
 
-    def reset_mode(self) -> None:
+    def reset_computer_player_mode(self) -> None:
         for mode in self.is_computer_player_mode:
             if self.is_computer_player_mode[mode]:
                 self.is_computer_player_mode[mode] = False
-
         self.get_computer_player().is_computer = False
 
     def reset_player_symbols(self) -> None:
@@ -203,3 +204,6 @@ class TicTacToe:
 
     def is_valid_board_entry(self, entry: str) -> bool:
         return entry in self.VALID_ENTRY_OPTIONS
+    
+    def is_computer_player_mode_on(self):
+        return has_true_value(self.is_computer_player_mode)

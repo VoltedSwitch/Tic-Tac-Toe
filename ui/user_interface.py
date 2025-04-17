@@ -43,21 +43,25 @@ class UserInterface:
                 self.tic_tac_toe.set_turn_end_for_active_player()
 
     def after_game_over(self) -> None:
-        print(self.tic_tac_toe.game_over_message())
-        print()
-        print(f"{self.tic_tac_toe.get_player_call(1).capitalize()} Symbol: {self.tic_tac_toe.player1.symbol}")
-        print(f"{self.tic_tac_toe.get_player_call(2).capitalize()} Symbol: {self.tic_tac_toe.player2.symbol} ")
-        print()
-        self.display_board_and_details()
-        print()
-        again = instant_input("Play again? (Y/N): ").strip().upper()
-        clear_screen()
-        if again == "Y":
-            self.tic_tac_toe.reset_game()
-            return self.START_OVER
-        else:
-            print("Thanks for playing!")
-            exit()
+        while True:
+            print(self.tic_tac_toe.game_over_message())
+            print()
+            print(f"{self.tic_tac_toe.get_player_call(1).capitalize()} Symbol: {self.tic_tac_toe.player1.symbol}")
+            print(f"{self.tic_tac_toe.get_player_call(2).capitalize()} Symbol: {self.tic_tac_toe.player2.symbol} ")
+            print()
+            self.display_board_and_details()
+            print()
+            again = instant_input("Play again? (Y/N): ").strip().upper()
+            clear_screen()
+            if again == "Y":
+                if self.is_computer_difficulty_mode_saved():
+                    self.reset_computer_difficulty_mode()
+                self.tic_tac_toe.reset_game()
+                return self.START_OVER
+            elif again == "N":
+                print("Thanks for playing!")
+                exit()
+            print("Please Enter Y or N as for Yes or No!\n")
 
     def before_starting_computer_versus_player_mode(self) -> str:
         while True:
@@ -150,7 +154,8 @@ class UserInterface:
             clear_screen()
 
             if option == self.GO_BACK:
-                self.tic_tac_toe.reset_mode()
+                if self.tic_tac_toe.is_computer_player_mode_on():
+                    self.tic_tac_toe.reset_computer_player_mode()
                 return self.GO_BACK
             elif self.tic_tac_toe.is_valid_board_entry(option):
                 return option
