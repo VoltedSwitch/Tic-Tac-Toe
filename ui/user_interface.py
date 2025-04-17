@@ -91,7 +91,7 @@ class UserInterface:
                 print(position_entry_statement)
                 time.sleep(1)
                 print("\nComputer is thinking...")
-                time.sleep(2)
+                time.sleep(1)
                 show_cursor()
                 position = self.tic_tac_toe.get_valid_computer_position()
             else:
