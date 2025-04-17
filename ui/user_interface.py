@@ -15,6 +15,7 @@ class UserInterface:
 
     def __init__(self):
         self.tic_tac_toe: TicTacToe = TicTacToe()
+        self.computer_difficulty_mode = None
 
     def play_game(self) -> None:
         while True:
@@ -47,7 +48,7 @@ class UserInterface:
         print(f"{self.tic_tac_toe.get_player_call(1).capitalize()} Symbol: {self.tic_tac_toe.player1.symbol}")
         print(f"{self.tic_tac_toe.get_player_call(2).capitalize()} Symbol: {self.tic_tac_toe.player2.symbol} ")
         print()
-        self.display_board()
+        self.display_board_and_details()
         print()
         again = instant_input("Play again? (Y/N): ").strip().upper()
         clear_screen()
@@ -63,39 +64,55 @@ class UserInterface:
             mode = self.get_valid_mode_difficulty_selection_or_back()
             if mode == self.GO_BACK:
                 return self.GO_BACK
-            self.tic_tac_toe.turn_on_computer_versus_player_mode(mode)
-            player1_symbol = self.get_valid_player_one_symbol_or_back()
-            if player1_symbol == self.GO_BACK:
-                continue
-            return player1_symbol
+            self.save_computer_difficulty_mode(mode)
+            while True:
+                player_number_or_back = self.get_valid_selection_player1_user_or_computer_or_back()
+                if player_number_or_back == self.GO_BACK:
+                    break
+                self.tic_tac_toe.turn_on_computer_versus_player_mode(mode, player_number_or_back)
+                player1_symbol_or_back = self.get_valid_player_one_symbol_or_back()
+                if player1_symbol_or_back == self.GO_BACK:
+                    continue
+                return player1_symbol_or_back
             
     def before_starting_player_versus_player_mode(self) -> str:
         while True:
-            player1_symbol = self.get_valid_player_one_symbol_or_back()
-            if player1_symbol == self.GO_BACK:
+            player1_symbol_or_back = self.get_valid_player_one_symbol_or_back()
+            if player1_symbol_or_back == self.GO_BACK:
                 return self.GO_BACK
-            return player1_symbol
+            return player1_symbol_or_back
+        
+    def get_valid_selection_player1_user_or_computer_or_back(self) -> str | int:
+        while True:
+            self.display_board_and_details(disable_positions_chart_view=True)
+            print()
+            player1 = instant_input(f"Select Who Should Be Player 1:\n1. Computer\n2. You\nor ({self.GO_BACK})ack\n\n> ").strip().upper()
+            clear_screen()
+            if player1 == self.GO_BACK:
+                self.reset_computer_difficulty_mode()
+                return self.GO_BACK
+            elif player1 in ("1", "2"):
+                return int(player1)
+            print("Please Enter A Valid Mode Number OR B for Back!\n")
 
     def get_valid_position_from_active_player(self) -> str:
         while True:
-            self.display_board()
+            self.display_board_and_details()
             print()
 
             player = self.tic_tac_toe.get_active_player_call()
             symbol = self.tic_tac_toe.get_active_player().symbol
-            
-            position_entry_statement = f"Enter a position, {player}, to place '{symbol}': "
+            message = f"Enter a position, {player}, to place '{symbol}': "
 
             if self.tic_tac_toe.get_active_player().is_computer:
                 hide_cursor()
-                print(position_entry_statement)
-                time.sleep(1)
+                print(message)
                 print("\nComputer is thinking...")
-                time.sleep(1)
+                time.sleep(2)
                 show_cursor()
                 position = self.tic_tac_toe.get_valid_computer_position()
             else:
-                position = instant_input(position_entry_statement).strip()
+                position = instant_input(message).strip()
             clear_screen()
 
             if self.tic_tac_toe.is_valid_box_position(position) and self.tic_tac_toe.is_box_empty(position):
@@ -107,13 +124,29 @@ class UserInterface:
 
     def get_valid_player_one_symbol_or_back(self) -> str:
         while True:
-            self.display_board(disable_positions_chart_view=True)
+            self.display_board_and_details(disable_positions_chart_view=True)
             print()
 
             player = self.tic_tac_toe.get_active_player_call().capitalize()
             O = self.tic_tac_toe.VALID_ENTRY_OPTIONS[0]
             X = self.tic_tac_toe.VALID_ENTRY_OPTIONS[1]
-            option = instant_input(f"{player} Select '{O}' or '{X}' to  continue or ({self.GO_BACK})ack: ").strip().upper()
+            message = f"Select '{O}' or '{X}' to continue or ({self.GO_BACK})ack: "
+
+            if self.tic_tac_toe.get_active_player().is_computer:
+                hide_cursor()
+                print(message)
+                print(f"\nComputer is thinking...\n")
+                time.sleep(2)
+                clear_screen()
+                self.display_board_and_details(disable_positions_chart_view=True)
+                print()
+                option = self.tic_tac_toe.get_computer_symbol_selection()
+                print(message)
+                print(f"\nComputer selected '{option}'")
+                time.sleep(2)
+                show_cursor()
+            else:
+                option = instant_input(f"{player} Select '{O}' or '{X}' to  continue or ({self.GO_BACK})ack: ").strip().upper()
             clear_screen()
 
             if option == self.GO_BACK:
@@ -130,9 +163,8 @@ class UserInterface:
             "3": "hard"
         }
         while True:
-            self.display_board(disable_positions_chart_view=True)
+            self.display_board_and_details(disable_positions_chart_view=True)
             print()
-
             mode_number = instant_input(f"Select An Option:\n1. Easy\n2. Medium\n3. Hard\nor ({self.GO_BACK})ack\n\n> ").strip().upper()
             clear_screen()
 
@@ -144,9 +176,8 @@ class UserInterface:
 
     def get_valid_versus_mode_selection(self) -> str:
         while True:
-            self.display_board(disable_positions_chart_view=True)
+            self.display_board_and_details(disable_positions_chart_view=True)
             print()
-
             mode_number = instant_input("Select An Option:\n1. Player vs Player\n2. Player vs Computer\n\n> ").strip()
             clear_screen()
 
@@ -154,9 +185,9 @@ class UserInterface:
                 return mode_number
             print("Please Enter A Valid Mode Number!\n")
 
-    def display_board(self, disable_positions_chart_view:bool=False) -> None:
-        if self.tic_tac_toe.is_computer_player_mode_on():
-            print(f"Computer Mode Difficulty: {self.tic_tac_toe.get_computer_mode_difficulty().capitalize()}")
+    def display_board_and_details(self, disable_positions_chart_view:bool=False) -> None:
+        if self.is_computer_difficulty_mode_saved():
+            print(f"Computer Mode Difficulty: {self.computer_difficulty_mode.capitalize()}")
             print()
         b: dict[str, str] = self.tic_tac_toe.board
         print(f"{b['1']}|{b['2']}|{b['3']}")
@@ -172,3 +203,12 @@ class UserInterface:
             print("4|5|6")
             print("-----")
             print("7|8|9")
+
+    def save_computer_difficulty_mode(self, mode: str) -> None:
+        self.computer_difficulty_mode = mode
+
+    def reset_computer_difficulty_mode(self) -> None:
+        self.computer_difficulty_mode = None
+    
+    def is_computer_difficulty_mode_saved(self) -> bool:
+        return self.computer_difficulty_mode is not None

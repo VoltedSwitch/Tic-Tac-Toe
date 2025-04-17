@@ -1,6 +1,5 @@
 import random
 from .player import Player
-from .structure_utility_functions import has_true_value
 
 class TicTacToe:
     WINNING_COMBINATIONS: list[list[str]] = [
@@ -35,9 +34,9 @@ class TicTacToe:
     def set_winner(self, player: Player) -> None:
         self.winner = 1 if player is self.player1 else 2
 
-    def turn_on_computer_versus_player_mode(self, mode: str) -> None:
+    def turn_on_computer_versus_player_mode(self, mode: str, player_number: int) -> None:
         self.is_computer_player_mode[mode] = True
-        self.player2.is_computer = True
+        self.get_player(player_number).is_computer = True
     
     def reset_game(self):
         self.reset_board()
@@ -50,7 +49,8 @@ class TicTacToe:
         for mode in self.is_computer_player_mode:
             if self.is_computer_player_mode[mode]:
                 self.is_computer_player_mode[mode] = False
-        self.player2.is_computer = False
+
+        self.get_computer_player().is_computer = False
 
     def reset_player_symbols(self) -> None:
         self.player1.symbol = None
@@ -60,7 +60,7 @@ class TicTacToe:
         for position in self.board:
             self.board[position] = self.EMPTY_BOX
 
-    def set_player_symbols(self, player1_symbol) -> None:
+    def set_player_symbols(self, player1_symbol: str) -> None:
         VALID_ENTRY_OPTIONS_MAPPED = {
             v: self.VALID_ENTRY_OPTIONS[1 - i]
             for i, v in enumerate(self.VALID_ENTRY_OPTIONS)
@@ -135,34 +135,42 @@ class TicTacToe:
             elif self.board[second] == self.board[third] == self.player1.symbol and self.is_box_empty(first):
                 return first
         return None
+    
+    def get_computer_symbol_selection(self) -> str:
+        return random.choice(self.VALID_ENTRY_OPTIONS)
 
-    def get_player(self, symbol: str) -> Player | None:
-        if symbol == self.player1.symbol:
+    def get_computer_player(self) -> Player | None:
+        for player in (self.player1, self.player2):
+            if player.is_computer:
+                return player
+        return None
+
+    def get_player(self, player_number: int) -> Player | None:
+        if player_number == 1:
             return self.player1
-        elif symbol == self.player2.symbol:
+        elif player_number == 2:
             return self.player2
         return None
     
     def get_active_player_call(self) -> str:
         if self.active_player == 1:
-            return "player 1"
+            return "player 1" if not self.player1.is_computer else "computer"
         else:
-            return "player 2" if not has_true_value(self.is_computer_player_mode) else "computer"
+            return "player 2" if not self.player2.is_computer else "computer"
     
     def get_player_call(self, player_number: int) -> str | None:
         if player_number == 1:
-            return "player 1"
+            return "player 1" if not self.player1.is_computer else "computer"
         elif player_number == 2:
-            return "player 2" if not has_true_value(self.is_computer_player_mode) else "computer"
+            return "player 2" if not self.player2.is_computer else "computer"
         return None
     
     def get_winner_player_call(self) -> str:
         if self.winner == 1:
-            return "player 1"
+            return "player 1" if not self.player1.is_computer else "computer"
         elif self.winner == 2:
-            return "player 2" if not has_true_value(self.is_computer_player_mode) else "computer"
-        else:
-            return None
+            return "player 2" if not self.player2.is_computer else "computer"
+        return None
     
     def get_active_player(self) -> Player:
         return self.player1 if self.active_player == 1 else self.player2
@@ -173,9 +181,6 @@ class TicTacToe:
         return "It's a tie!"
     
     # Bool Getter Methods:
-
-    def is_computer_player_mode_on(self) -> bool:
-        return has_true_value(self.is_computer_player_mode)
 
     def some_player_won(self) -> bool:
         for combination in self.WINNING_COMBINATIONS:
