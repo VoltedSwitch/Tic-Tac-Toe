@@ -10,6 +10,7 @@ from structure.player import Player
 
 class UserInterface:
     GO_BACK = "B"
+    START_OVER = "O"
 
     def __init__(self):
         self.tic_tac_toe: TicTacToe = TicTacToe()
@@ -45,12 +46,30 @@ class UserInterface:
         clear_screen()
         if again == "Y":
             self.tic_tac_toe.reset_game()
-            self.play_game()
+            return self.START_OVER
         else:
             print("Thanks for playing!")
             exit()
 
-    def get_valid_position_from_active_player(self) -> None:
+    def before_starting_computer_versus_player_mode(self) -> str:
+        while True:
+            mode = self.get_valid_mode_difficulty_selection_or_back()
+            if mode == self.GO_BACK:
+                return self.GO_BACK
+            self.tic_tac_toe.turn_on_computer_versus_player_mode(mode)
+            player1_symbol = self.get_valid_player_one_symbol_or_back()
+            if player1_symbol == self.GO_BACK:
+                continue
+            return player1_symbol
+            
+    def before_starting_player_versus_player_mode(self) -> str:
+        while True:
+            player1_symbol = self.get_valid_player_one_symbol_or_back()
+            if player1_symbol == self.GO_BACK:
+                return self.GO_BACK
+            return player1_symbol
+
+    def get_valid_position_from_active_player(self) -> str:
         while True:
             self.display_board()
             print()
@@ -79,7 +98,7 @@ class UserInterface:
             else:
                 print("Box Already Filled!\n")
 
-    def get_valid_player_one_symbol(self) -> None:
+    def get_valid_player_one_symbol_or_back(self) -> str:
         while True:
             self.display_board(disable_positions_chart_view=True)
             print()
@@ -92,13 +111,12 @@ class UserInterface:
 
             if option == self.GO_BACK:
                 self.tic_tac_toe.reset_mode()
-                return option
+                return self.GO_BACK
             elif self.tic_tac_toe.is_valid_board_entry(option):
                 return option
-            else:
-                print(f"Please Enter '{O}' OR '{X}'\n")
+            print(f"Please Enter '{O}' OR '{X} OR B for Back'\n")
 
-    def get_valid_mode_difficulty_selection(self) -> str:
+    def get_valid_mode_difficulty_selection_or_back(self) -> str:
         mode_difficulty = {
             "1": "easy",
             "2": "medium",
@@ -112,11 +130,10 @@ class UserInterface:
             clear_screen()
 
             if mode == self.GO_BACK:
-                return mode
+                return self.GO_BACK
             elif mode in ("1", "2", "3"):
                 return mode_difficulty[mode]
-            else:
-                print("Please Enter A Valid Mode Number!\n")
+            print("Please Enter A Valid Mode Number OR B for Back!\n")
 
     def get_valid_versus_mode_selection(self) -> str:
         while True:
@@ -128,30 +145,29 @@ class UserInterface:
 
             if mode in ("1", "2"):
                 return mode
-            else:
-                print("Please Enter A Valid Mode Number!\n")
+            print("Please Enter A Valid Mode Number!\n")
             
     def play_game(self) -> None:
         while True:
             if self.get_valid_versus_mode_selection() == "2":
-                mode = self.get_valid_mode_difficulty_selection()
-                if mode == self.GO_BACK:
+                player1_symbol_or_back = self.before_starting_computer_versus_player_mode()
+                if player1_symbol_or_back == self.GO_BACK:
                     continue
-                self.tic_tac_toe.turn_on_computer_versus_player_mode(mode)
-
-            player1_symbol = self.get_valid_player_one_symbol()
-            if player1_symbol == self.GO_BACK:
-                continue
-            self.tic_tac_toe.set_player_symbols(player1_symbol)
-
+            else:
+                player1_symbol_or_back = self.before_starting_player_versus_player_mode()
+                if player1_symbol_or_back == self.GO_BACK:
+                    continue
+                
+            self.tic_tac_toe.set_player_symbols(player1_symbol_or_back)
             while True:
                 position = self.get_valid_position_from_active_player()
                 self.tic_tac_toe.active_player_box_fill(position)
 
                 if self.tic_tac_toe.some_player_won():
                     self.tic_tac_toe.set_winner(self.tic_tac_toe.get_active_player())
-                    self.after_game_over()
+                    if self.after_game_over() == self.START_OVER:
+                        break
                 elif self.tic_tac_toe.is_board_full():
-                    self.after_game_over()
-                else:
-                    self.tic_tac_toe.set_turn_end_for_active_player()
+                    if self.after_game_over() == self.START_OVER:
+                        break
+                self.tic_tac_toe.set_turn_end_for_active_player()
