@@ -155,7 +155,7 @@ class UserInterface:
 
             if option == self.GO_BACK:
                 if self.tic_tac_toe.is_computer_player_mode_on():
-                    self.tic_tac_toe.reset_computer_player_mode()
+                    self.tic_tac_toe.reset_to_default_versus_mode()
                 return self.GO_BACK
             elif self.tic_tac_toe.is_valid_board_entry(option):
                 return option

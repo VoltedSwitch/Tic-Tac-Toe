@@ -42,12 +42,12 @@ class TicTacToe:
     def reset_game(self):
         self.reset_board()
         if self.is_computer_player_mode_on():
-            self.reset_computer_player_mode()
+            self.reset_to_default_versus_mode()
         self.reset_player_symbols()
         self.active_player = 1
         self.winner = None
 
-    def reset_computer_player_mode(self) -> None:
+    def reset_to_default_versus_mode(self) -> None:
         for mode in self.is_computer_player_mode:
             if self.is_computer_player_mode[mode]:
                 self.is_computer_player_mode[mode] = False
@@ -93,47 +93,90 @@ class TicTacToe:
         return None
     
     def get_hard_computer_position(self) -> str:
-        return self.computer_try_to_win() or self.computer_try_to_block() or self.get_random_computer_position()
-    
+        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        middle_position = self.enter_middle_position()
+        corner_position = self.computer_try_cornering()
+        random_position = self.get_random_computer_position()
+
+        if win_or_block_position:
+            return win_or_block_position
+        elif middle_position:
+            return middle_position
+        elif corner_position:
+            return corner_position
+        return random_position
+
     def get_medium_computer_position(self) -> str:
-        if random.randint(1, 100) <= 60: 
-            result = self.computer_try_to_win() or self.computer_try_to_block()
-            if result:
-                return result
-        return self.get_random_computer_position()
+        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        middle_position = self.enter_middle_position()
+        random_position = self.get_random_computer_position()
+
+        if random.randint(1, 100) <= 60 and win_or_block_position: 
+            return win_or_block_position
+        elif random.randint(1, 100) <= 40 and middle_position:
+            return middle_position
+        return random_position
     
     def get_easy_computer_position(self) -> str:
-        if random.randint(1, 100) <= 30: 
-            result = self.computer_try_to_win() or self.computer_try_to_block()
-            if result:
-                return result
-        return self.get_random_computer_position()
+        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        random_position = self.get_random_computer_position()
+
+        if random.randint(1, 100) <= 30 and win_or_block_position:
+            return win_or_block_position
+        return random_position
     
     def get_random_computer_position(self) -> str:
         while True:
             position = str(random.randint(1, 9))
             if self.is_box_empty(position):
                 return position
+            
+    def enter_middle_position(self) -> str:
+        MIDDLE_POSITION = "5"
+        if self.is_box_empty(MIDDLE_POSITION):
+            return MIDDLE_POSITION
+        return None
     
+    def computer_try_cornering(self) -> str | None:
+        corners = ["1", "3", "7", "9"]
+        available_corners = [pos for pos in corners if self.is_box_empty(pos)]
+        symbol = self.get_computer_player().symbol
+
+        # Check if computer already owns one corner
+        owned_corners = [pos for pos in corners if self.board[pos] == symbol]
+        
+        # Try to take opposite corner if one is owned
+        opposites = {"1": "9", "3": "7", "7": "3", "9": "1"}
+        for pos in owned_corners:
+            opposite = opposites[pos]
+            if self.is_box_empty(opposite):
+                return opposite
+
+        # If no opposite corner is available, take any free corner
+        if available_corners:
+            return random.choice(available_corners)
+        
+        return None
+
     def computer_try_to_win(self) -> str | None:
         for combination in self.WINNING_COMBINATIONS:
             first, second, third = combination
-            if self.board[first] == self.board[second] == self.player2.symbol and self.is_box_empty(third):
+            if self.board[first] == self.board[second] == self.get_computer_player().symbol and self.is_box_empty(third):
                 return third
-            elif self.board[first] == self.board[third] == self.player2.symbol and self.is_box_empty(second):
+            elif self.board[first] == self.board[third] == self.get_computer_player().symbol and self.is_box_empty(second):
                 return second
-            elif self.board[second] == self.board[third] == self.player2.symbol and self.is_box_empty(first):
+            elif self.board[second] == self.board[third] == self.get_computer_player().symbol and self.is_box_empty(first):
                 return first
         return None
     
     def computer_try_to_block(self) -> str | None:
         for combination in self.WINNING_COMBINATIONS:
             first, second, third = combination
-            if self.board[first] == self.board[second] == self.player1.symbol and self.is_box_empty(third):
+            if self.board[first] == self.board[second] == self.get_non_computer_player().symbol and self.is_box_empty(third):
                 return third
-            elif self.board[first] == self.board[third] == self.player1.symbol and self.is_box_empty(second):
+            elif self.board[first] == self.board[third] == self.get_non_computer_player().symbol and self.is_box_empty(second):
                 return second
-            elif self.board[second] == self.board[third] == self.player1.symbol and self.is_box_empty(first):
+            elif self.board[second] == self.board[third] == self.get_non_computer_player().symbol and self.is_box_empty(first):
                 return first
         return None
     
@@ -143,6 +186,12 @@ class TicTacToe:
     def get_computer_player(self) -> Player | None:
         for player in (self.player1, self.player2):
             if player.is_computer:
+                return player
+        return None
+    
+    def get_non_computer_player(self):
+        for player in (self.player1, self.player2):
+            if not player.is_computer:
                 return player
         return None
 
