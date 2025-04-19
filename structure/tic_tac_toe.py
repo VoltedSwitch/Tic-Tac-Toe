@@ -2,15 +2,21 @@ import random
 from .player import Player
 from .structure_utility_functions import has_true_value
 
+
 class TicTacToe:
     WINNING_COMBINATIONS: list[list[str]] = [
-        ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"],
-        ["1", "4", "7"], ["2", "5", "8"], ["3", "6", "9"],
-        ["1", "5", "9"], ["3", "5", "7"]
+        ["1", "2", "3"],
+        ["4", "5", "6"],
+        ["7", "8", "9"],
+        ["1", "4", "7"],
+        ["2", "5", "8"],
+        ["3", "6", "9"],
+        ["1", "5", "9"],
+        ["3", "5", "7"],
     ]
     VALID_ENTRY_OPTIONS: tuple = ("O", "X")
     EMPTY_BOX: str = " "
-    
+
     def __init__(self) -> None:
         self.player1: Player = Player()
         self.player2: Player = Player()
@@ -19,26 +25,34 @@ class TicTacToe:
         self.is_computer_player_mode: dict[str, bool] = {
             "easy": False,
             "medium": False,
-            "hard": False
+            "hard": False,
         }
         self.board: dict[str, str] = {
-            "1": " ", "2": " ", "3": " ",
-            "4": " ", "5": " ", "6": " ",
-            "7": " ", "8": " ", "9": " "
+            "1": " ",
+            "2": " ",
+            "3": " ",
+            "4": " ",
+            "5": " ",
+            "6": " ",
+            "7": " ",
+            "8": " ",
+            "9": " ",
         }
 
     # Setter Methods:
-    
+
     def active_player_box_fill(self, position: str) -> None:
         self.board[position] = self.get_active_player().symbol
 
     def set_winner(self, player: Player) -> None:
         self.winner = 1 if player is self.player1 else 2
 
-    def turn_on_computer_versus_player_mode(self, mode: str, player_number: int) -> None:
+    def turn_on_computer_versus_player_mode(
+        self, mode: str, player_number: int
+    ) -> None:
         self.is_computer_player_mode[mode] = True
         self.get_player(player_number).is_computer = True
-    
+
     def reset_game(self):
         self.reset_board()
         if self.is_computer_player_mode_on():
@@ -82,7 +96,7 @@ class TicTacToe:
         elif self.is_computer_player_mode["hard"]:
             return "hard"
         return None
-    
+
     def get_valid_computer_position(self) -> str | None:
         if self.is_computer_player_mode["easy"]:
             return self.get_easy_computer_position()
@@ -91,9 +105,11 @@ class TicTacToe:
         elif self.is_computer_player_mode["hard"]:
             return self.get_hard_computer_position()
         return None
-    
+
     def get_hard_computer_position(self) -> str:
-        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        win_or_block_position = (
+            self.computer_try_to_win() or self.computer_try_to_block()
+        )
         middle_position = self.enter_middle_position()
         corner_position = self.computer_try_cornering()
         random_position = self.get_random_computer_position()
@@ -107,36 +123,40 @@ class TicTacToe:
         return random_position
 
     def get_medium_computer_position(self) -> str:
-        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        win_or_block_position = (
+            self.computer_try_to_win() or self.computer_try_to_block()
+        )
         middle_position = self.enter_middle_position()
         random_position = self.get_random_computer_position()
 
-        if random.randint(1, 100) <= 60 and win_or_block_position: 
+        if random.randint(1, 100) <= 60 and win_or_block_position:
             return win_or_block_position
         elif random.randint(1, 100) <= 40 and middle_position:
             return middle_position
         return random_position
-    
+
     def get_easy_computer_position(self) -> str:
-        win_or_block_position = self.computer_try_to_win() or self.computer_try_to_block()
+        win_or_block_position = (
+            self.computer_try_to_win() or self.computer_try_to_block()
+        )
         random_position = self.get_random_computer_position()
 
         if random.randint(1, 100) <= 30 and win_or_block_position:
             return win_or_block_position
         return random_position
-    
+
     def get_random_computer_position(self) -> str:
         while True:
             position = str(random.randint(1, 9))
             if self.is_box_empty(position):
                 return position
-            
+
     def enter_middle_position(self) -> str:
         MIDDLE_POSITION = "5"
         if self.is_box_empty(MIDDLE_POSITION):
             return MIDDLE_POSITION
         return None
-    
+
     def computer_try_cornering(self) -> str | None:
         corners = ["1", "3", "7", "9"]
         available_corners = [pos for pos in corners if self.is_box_empty(pos)]
@@ -144,7 +164,7 @@ class TicTacToe:
 
         # Check if computer already owns one corner
         owned_corners = [pos for pos in corners if self.board[pos] == symbol]
-        
+
         # Try to take opposite corner if one is owned
         opposites = {"1": "9", "3": "7", "7": "3", "9": "1"}
         for pos in owned_corners:
@@ -155,31 +175,43 @@ class TicTacToe:
         # If no opposite corner is available, take any free corner
         if available_corners:
             return random.choice(available_corners)
-        
+
         return None
 
     def computer_try_to_win(self) -> str | None:
         for combination in self.WINNING_COMBINATIONS:
             first, second, third = combination
-            if self.board[first] == self.board[second] == self.get_computer_player().symbol and self.is_box_empty(third):
+            if self.board[first] == self.board[
+                second
+            ] == self.get_computer_player().symbol and self.is_box_empty(third):
                 return third
-            elif self.board[first] == self.board[third] == self.get_computer_player().symbol and self.is_box_empty(second):
+            elif self.board[first] == self.board[
+                third
+            ] == self.get_computer_player().symbol and self.is_box_empty(second):
                 return second
-            elif self.board[second] == self.board[third] == self.get_computer_player().symbol and self.is_box_empty(first):
+            elif self.board[second] == self.board[
+                third
+            ] == self.get_computer_player().symbol and self.is_box_empty(first):
                 return first
         return None
-    
+
     def computer_try_to_block(self) -> str | None:
         for combination in self.WINNING_COMBINATIONS:
             first, second, third = combination
-            if self.board[first] == self.board[second] == self.get_non_computer_player().symbol and self.is_box_empty(third):
+            if self.board[first] == self.board[
+                second
+            ] == self.get_non_computer_player().symbol and self.is_box_empty(third):
                 return third
-            elif self.board[first] == self.board[third] == self.get_non_computer_player().symbol and self.is_box_empty(second):
+            elif self.board[first] == self.board[
+                third
+            ] == self.get_non_computer_player().symbol and self.is_box_empty(second):
                 return second
-            elif self.board[second] == self.board[third] == self.get_non_computer_player().symbol and self.is_box_empty(first):
+            elif self.board[second] == self.board[
+                third
+            ] == self.get_non_computer_player().symbol and self.is_box_empty(first):
                 return first
         return None
-    
+
     def get_computer_symbol_selection(self) -> str:
         return random.choice(self.VALID_ENTRY_OPTIONS)
 
@@ -188,7 +220,7 @@ class TicTacToe:
             if player.is_computer:
                 return player
         return None
-    
+
     def get_non_computer_player(self):
         for player in (self.player1, self.player2):
             if not player.is_computer:
@@ -201,44 +233,47 @@ class TicTacToe:
         elif player_number == 2:
             return self.player2
         return None
-    
+
     def get_active_player_call(self) -> str:
         if self.active_player == 1:
             return "player 1" if not self.player1.is_computer else "computer"
         else:
             return "player 2" if not self.player2.is_computer else "computer"
-    
+
     def get_player_call(self, player_number: int) -> str | None:
         if player_number == 1:
             return "player 1" if not self.player1.is_computer else "computer"
         elif player_number == 2:
             return "player 2" if not self.player2.is_computer else "computer"
         return None
-    
+
     def get_winner_player_call(self) -> str:
         if self.winner == 1:
             return "player 1" if not self.player1.is_computer else "computer"
         elif self.winner == 2:
             return "player 2" if not self.player2.is_computer else "computer"
         return None
-    
+
     def get_active_player(self) -> Player:
         return self.player1 if self.active_player == 1 else self.player2
-    
+
     def game_over_message(self) -> str:
         if self.winner:
             return f"{self.get_winner_player_call().capitalize()} wins!"
         return "It's a tie!"
-    
+
     # Bool Getter Methods:
 
     def some_player_won(self) -> bool:
         for combination in self.WINNING_COMBINATIONS:
             first, second, third = combination
-            if self.board[first] == self.board[second] == self.board[third] and self.board[first] != self.EMPTY_BOX:
+            if (
+                self.board[first] == self.board[second] == self.board[third]
+                and self.board[first] != self.EMPTY_BOX
+            ):
                 return True
         return False
-    
+
     def has_player1_not_selected(self) -> bool:
         return self.player1.symbol is None
 
@@ -253,6 +288,6 @@ class TicTacToe:
 
     def is_valid_board_entry(self, entry: str) -> bool:
         return entry in self.VALID_ENTRY_OPTIONS
-    
+
     def is_computer_player_mode_on(self):
         return has_true_value(self.is_computer_player_mode)

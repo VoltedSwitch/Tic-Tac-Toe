@@ -4,6 +4,7 @@ import termios
 import tty
 import select
 
+
 def clear_screen():
     os.system("clear" if os.name == "posix" else "cls")
 
@@ -17,17 +18,16 @@ def show_cursor() -> None:
 
 
 def instant_input(
-    prompt: str | None = None, 
-    timeout: int | float | None = None, 
-    special_keys: dict[str, str] | None = None
-    ) -> str:
-
+    prompt: str | None = None,
+    timeout: int | float | None = None,
+    special_keys: dict[str, str] | None = None,
+) -> str:
     """
     Reads a single character from standard input without waiting for the Enter key.
     If a timeout is specified, it will return "no key pressed" if no key is pressed within the timeout period.
     If special_keys is provided, it will map certain key combinations to specific strings.
     """
-    
+
     if prompt:
         print(prompt, end="", flush=True)
 
@@ -52,7 +52,9 @@ def instant_input(
         if special_keys is None:
             return key_pressed  # Return raw keypress if no special keys are set
         else:
-            return special_keys.get(key_pressed, key_pressed)  # Apply mapping if provided
+            return special_keys.get(
+                key_pressed, key_pressed
+            )  # Apply mapping if provided
 
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
