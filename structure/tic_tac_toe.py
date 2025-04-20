@@ -147,7 +147,7 @@ class TicTacToe:
 
     def get_random_computer_position(self) -> str:
         while True:
-            position = str(random.randint(1, 9))
+            position = str(random.randint(1, len(self.board)))
             if self.is_box_empty(position):
                 return position
 
@@ -284,7 +284,7 @@ class TicTacToe:
         return self.board[position] == self.EMPTY_BOX
 
     def is_valid_box_position(self, position: str) -> bool:
-        return position.isdigit() and int(position) in range(1, 10)
+        return position.isdigit() and int(position) in range(1, len(self.board) + 1)
 
     def is_valid_board_entry(self, entry: str) -> bool:
         return entry in self.VALID_ENTRY_OPTIONS
