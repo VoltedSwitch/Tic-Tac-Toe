@@ -83,7 +83,7 @@ class UserInterface:
                 )
                 if player_number_or_back == self.GO_BACK:
                     break
-                self.tic_tac_toe.turn_on_computer_versus_player_mode(
+                self.tic_tac_toe.turn_on_computer_and_player_mode(
                     mode, player_number_or_back
                 )
                 player1_symbol_or_back = self.get_valid_player_one_symbol_or_back()
@@ -180,7 +180,7 @@ class UserInterface:
             clear_screen()
 
             if option == self.GO_BACK:
-                if self.tic_tac_toe.is_computer_player_mode_on():
+                if self.tic_tac_toe.is_computer_and_player_mode_on():
                     self.tic_tac_toe.reset_to_default_versus_mode()
                 return self.GO_BACK
             elif self.tic_tac_toe.is_valid_board_entry(option):

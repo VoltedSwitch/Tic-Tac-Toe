@@ -47,15 +47,13 @@ class TicTacToe:
     def set_winner(self, player: Player) -> None:
         self.winner = 1 if player is self.player1 else 2
 
-    def turn_on_computer_versus_player_mode(
-        self, mode: str, player_number: int
-    ) -> None:
+    def turn_on_computer_and_player_mode(self, mode: str, player_number: int) -> None:
         self.is_computer_player_mode[mode] = True
         self.get_player(player_number).is_computer = True
 
     def reset_game(self):
         self.reset_board()
-        if self.is_computer_player_mode_on():
+        if self.is_computer_and_player_mode_on():
             self.reset_to_default_versus_mode()
         self.reset_player_symbols()
         self.active_player = 1
@@ -289,5 +287,5 @@ class TicTacToe:
     def is_valid_board_entry(self, entry: str) -> bool:
         return entry in self.VALID_ENTRY_OPTIONS
 
-    def is_computer_player_mode_on(self):
+    def is_computer_and_player_mode_on(self):
         return has_true_value(self.is_computer_player_mode)
