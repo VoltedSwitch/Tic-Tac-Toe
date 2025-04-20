@@ -7,7 +7,6 @@ from .user_interface_utility_functions import (
 )
 from .colors import c
 from structure.tic_tac_toe import TicTacToe
-from structure.player import Player
 
 
 class UserInterface:
