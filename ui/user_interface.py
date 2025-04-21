@@ -154,7 +154,9 @@ class UserInterface:
             player = self.tic_tac_toe.get_active_player_call().capitalize()
             O = self.tic_tac_toe.VALID_ENTRY_OPTIONS[0]
             X = self.tic_tac_toe.VALID_ENTRY_OPTIONS[1]
-            message = f"Select '{O}' or '{X}' to continue or ({self.GO_BACK})ack: "
+            message = (
+                f"{player} Select '{O}' or '{X}' to continue or ({self.GO_BACK})ack: "
+            )
 
             if self.tic_tac_toe.get_active_player().is_computer:
                 hide_cursor()
@@ -170,13 +172,7 @@ class UserInterface:
                 time.sleep(2)
                 show_cursor()
             else:
-                option = (
-                    instant_input(
-                        f"{player} Select '{O}' or '{X}' to  continue or ({self.GO_BACK})ack: "
-                    )
-                    .strip()
-                    .upper()
-                )
+                option = instant_input(message).strip().upper()
             clear_screen()
 
             if option == self.GO_BACK:
