@@ -10,24 +10,31 @@ A simple yet fun terminal-based Tic Tac Toe game with multiple difficulty modes 
 - 🧠 Multiple Difficulty Modes for Computer
 - 🔙 Press `'B'` anytime to go back
 - ✨ Clean and Simple Interface
-- ✅ Runs on both **macOS** and **Windows**
+- ✅ Runs on **macOS**, **Windows**, and **Linux**
+- 🐍 Requires **Python 3.8+**
 
 ---
+
 ## 📦 Download & Play
 
-- [⬇️ Download The Latest Version Of Python In Order To Run The App](https://www.python.org/downloads/)
+- 🔗 [Download the Latest Version of Python](https://www.python.org/downloads/)
 
-- [⬇️ Click Here To Download The App's Latest Version For Mac](https://github.com/VoltedSwitch/Tic-Tac-Toe/archive/refs/tags/v1.0.0.zip)
+- 💾 [Download Tic Tac Toe v1.0.0 (ZIP)](https://github.com/VoltedSwitch/Tic-Tac-Toe/archive/refs/tags/v1.0.0.zip)
+
+> After downloading, extract the `.zip` file to access the game folder. Make sure the folder contains `main.py` and other game files directly (not inside another subfolder).
 
 ---
 
-## 🛠️ How to Run (Mac Users)
+## 💻 How to Run the Game
 
-1. Download the game using the link above
-2. Locate the downloaded file in your **Downloads** folder in this format: **Tic-Tac-Toe-version #.zip**
-3. Double click on the file to create the app folder named without **.zip**
-4. Right click on the the folder and select copy
-5. Then click **Cmd + Space Bar** on your Mac's keyboard, type in **terminal** and open
-6. In terminal type in: **cd**, then click **Space Bar** then **Cmd + v**, then press **Enter**
-7. Finally type **python3 main.py** then click **Enter** to run the app
-### Enjoy! 🎉
+### 🖥️ On macOS:
+
+1. Download the game using the link above.
+2. Locate the downloaded `.zip` file in your **Downloads** folder.
+3. Double-click it to extract the folder: `Tic-Tac-Toe-1.0.0/`
+4. Open **Terminal** (press `Cmd + Space`, type "Terminal", and hit Enter).
+5. Type `cd ` (with a space), then drag and drop the folder into the terminal — or copy its path using `Cmd + v` — then press **Enter**.
+6. Run the game:
+   ```bash
+   python3 main.py
+## Enjoy! 🎉
