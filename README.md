@@ -29,14 +29,26 @@ A simple yet fun terminal-based Tic Tac Toe game with multiple difficulty modes 
 
 ### 🖥️ On macOS:
 
-1. Download the game using the link above.
+1. Download the app using the link above.
 2. Locate a file in this format in your **Download's** folder within Finder: `Tic-Tac-Toe-#.#.#.zip`
 3. Double-click the file to extract a folder in this format: `Tic-Tac-Toe-#.#.#`
 4. Right-click on the folder and select `copy`
 5. Open **Terminal** (press `Cmd + Space`, type "Terminal", and click open.
 - Type `cd ` (with a space), then press `Cmd + v` — then press **Enter**).
-- Run the game:
+- Run the game by copy & pasting this command:
    ```bash
    python3 main.py
+
+### 🪟 On Windows:
+
+1. Download the app using the link above.
+2. Locate a file in this format in your **Downloads** folder using File Explorer: `Tic-Tac-Toe-#.#.#.zip`
+3. Right-click the file and select `Extract All` to extract a folder in this format: `Tic-Tac-Toe-#.#.#`
+4. Right-click on the folder again and select `Copy`
+5. Open **PowerShell** (press `Win + S`, type "PowerShell", and hit Enter)
+- Type `cd ` (with a space), then press `Ctrl + v` — then press **Enter**).
+- Run the game by copy & pasting this command:
+   ```powershell
+   python main.py
    
 ## Enjoy! 🎉
