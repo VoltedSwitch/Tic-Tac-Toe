@@ -30,9 +30,10 @@ A simple yet fun terminal-based Tic Tac Toe game with multiple difficulty modes 
 ### 🖥️ On macOS:
 
 1. Download the game using the link above.
-2. Locate the downloaded `.zip` file in your **Downloads** folder.
-3. Double-click it to extract the folder: `Tic-Tac-Toe-1.0.0/`
-4. Open **Terminal** (press `Cmd + Space`, type "Terminal", and click open.
+2. Locate a file in this format in your **Download's** folder within Finder: `Tic-Tac-Toe-#.#.#.zip`
+3. Double-click the file to extract a folder in this format: `Tic-Tac-Toe-#.#.#`
+4. Right-click on the folder and select `copy`
+5. Open **Terminal** (press `Cmd + Space`, type "Terminal", and click open.
 - Type `cd ` (with a space), then press `Cmd + v` — then press **Enter**).
 - Run the game:
    ```bash
