@@ -19,7 +19,7 @@ A simple yet fun terminal-based Tic Tac Toe game with multiple difficulty modes 
 
 - 🔗 [Download the Latest Version of Python](https://www.python.org/downloads/)
 
-- 💾 [Download Tic Tac Toe v1.0.0 (ZIP)](https://github.com/VoltedSwitch/Tic-Tac-Toe/archive/refs/tags/v1.0.0.zip)
+- 💾 [Download Tic Tac Toe Lastest Version (ZIP)](https://github.com/VoltedSwitch/Tic-Tac-Toe/archive/refs/tags/v1.0.0.zip)
 
 > After downloading, extract the `.zip` file to access the game folder. Make sure the folder contains `main.py` and other game files directly (not inside another subfolder).
 
